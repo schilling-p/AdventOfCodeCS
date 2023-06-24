@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 
-
 // Task:
 // I am given a list of numbers like the one in calories.txt
 // Each consecutive stream of numbers represents one reindeer
@@ -9,20 +8,6 @@ using System.IO;
 
 public class Day1
 {
-    /*
-     Current status:
-        - the values from the text file are loaded into a list and are seperated by a 0
-        - what I need to know is, who is the elf with the most calories and which one is it
-        - my idea is that I make a dictoinary that sums up all the entries between 2 zeros and stores them under a number
-        - this could be done by a foreach
-        - the while loop builds the list
-
-    ideas:
-        - change the statement in the while loop to help with the selection process
-        - create a dictionary with keys being the deers and values being a list of the associated calories
-        - How can I determine when a new reindeer starts?
-     */
-
 
     public static void Main()
     {
@@ -39,7 +24,7 @@ public class Day1
 
             if (oneLine == "")
             {
-                result = 000000000;
+                result = 0;
             }
             else
             {
@@ -51,10 +36,51 @@ public class Day1
             oneLine = reader.ReadLine();
         }
 
+        int currentElf = 1;
+        int totalCalories = 0;
+        Dictionary<int, int> elfCalories = new Dictionary<int, int>();
 
+        foreach (int calories in values)
+        {
+
+            if (calories == 0)
+            {
+                elfCalories.Add(currentElf, totalCalories);
+
+                currentElf++;
+                totalCalories = 0;
+            }
+
+            else
+            {
+                totalCalories += calories;
+            }
+        }
+
+        elfCalories.Add(currentElf, totalCalories);
+
+        List<int> winner = new List<int>(FindElfWithMostCalories(elfCalories));
+
+        List<int> FindElfWithMostCalories(Dictionary<int, int> elfDictionary)
+        {
+            int elfWithMostCalories = elfDictionary.First().Key;
+            foreach (KeyValuePair<int, int> pair in elfDictionary)
+            {
+                if (pair.Value > elfDictionary[elfWithMostCalories])
+                {
+                    elfWithMostCalories = pair.Key;
+                }
+            }
+
+            List<int> winner = new List<int>();
+            winner.Add(elfWithMostCalories);
+            winner.Add(elfDictionary[elfWithMostCalories]);
+
+            return winner;
+        }
+
+        Console.WriteLine($"The Elf with the most calories is Elf #{winner[0]} with a total of {winner[1]}.");
 
         reader.Close();
-        Console.ReadLine();
-
     }
 }
