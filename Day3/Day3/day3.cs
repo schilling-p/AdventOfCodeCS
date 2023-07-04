@@ -21,6 +21,8 @@ Output:
 
  */
 
+using System.Reflection;
+
 public class Solution
 {
     public static void Main()
@@ -37,8 +39,6 @@ public class Solution
             oneLine = reader.ReadLine();
         }
 
-        List<string> halves = new();
-
         /*
 
         I need a nice way to split a string in half and I don't know how to do that yet
@@ -48,24 +48,105 @@ public class Solution
          */
 
 
+        // this is a list that contains each of the input strings as a list of individual characters
+        List<List<char>> characterList = new();
+
         foreach (string backpack in backpacks)
         {
-            int middleOfString = backpack.Length / 2;
-            int currentPosition = 0;
-            string? firstHalf = null;
-            string? secondHalf = null;
-
-            firstHalf += backpack.Min<char>();
-            currentPosition += 1;
-
+            characterList.Add(ReturnStringAsListOfChars(backpack));
         }
 
-
-
-        foreach (string half in halves)
+        List<char> ReturnStringAsListOfChars(string input)
         {
-            Console.WriteLine(half);
+            List<char> stringAsChar = new();
+            foreach (char letter in input)
+            {
+                stringAsChar.Add(letter);
+            }
 
+            return stringAsChar;
+        }
+
+        // list of all the halves of strings
+        List<List<List<char>>> halvesOfStrings = new();
+
+        foreach (List<char> listOfCharacters in characterList)
+        {
+            halvesOfStrings.Add(SplitListOfCharsInHalf(listOfCharacters));
+        }
+
+        List<List<char>> SplitListOfCharsInHalf(List<char> stringList)
+        {
+            List<List<char>> halves = new();
+            List<char> fistHalf = new();
+            List<char> secondHalf = new();
+
+            int middle = stringList.Count / 2;
+
+            foreach (char character in stringList.GetRange(0, middle))
+            {
+                fistHalf.Add(character);
+            }
+
+            foreach (char character in stringList.GetRange(middle, count: middle))
+            {
+                secondHalf.Add(character);
+            }
+
+            halves.Add(fistHalf);
+            halves.Add(secondHalf);
+
+            return halves;
+        }
+        /*
+        foreach (char letter in stringList)
+        {
+            int middle = stringList.Count / 2;
+
+
+            /*
+            if (stringList.IndexOf(letter) < middle)
+            {
+                fistHalf.Add(letter);
+            }
+            else if (stringList.IndexOf(letter) == middle)
+            {
+                secondHalf.Add(letter);
+            }
+            else
+            {
+                secondHalf.Add(letter);
+            }
+            */
+        /*
+
+        Current implementation:
+
+        Say we get the strings: "string" and "integers"
+
+        STEPS:
+        first:
+            - [string, integers]
+        second:
+            - [ [s,t,r,i,n,g], [i,n,t,e,g,e,r,s] ]
+        third:
+            - [ [ [s,t,r], [i,n,g], [i,n,t,e], [g,e,r,s] ] ]
+
+         */
+
+        // Compare each adjacent halves with each other and see which item is in both of them
+
+        foreach (List<List<char>> stringContainningTwoHalves in halvesOfStrings)
+        {
+            Console.WriteLine("\nNew string: ");
+            foreach (List<char> half in stringContainningTwoHalves)
+            {
+                Console.WriteLine("\n\tNew half: ");
+                foreach (char letter in half)
+                {
+                    Console.Write(letter);
+                }
+            }
         }
     }
 }
