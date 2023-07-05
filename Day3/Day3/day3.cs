@@ -21,7 +21,21 @@ Output:
 
  */
 
-using System.Reflection;
+/*
+
+        Current implementation:
+
+        Say we get the strings: "string" and "integers"
+
+        STEPS:
+        first:
+            - [string, integers]
+        second:
+            - [ [s,t,r,i,n,g], [i,n,t,e,g,e,r,s] ]
+        third:
+            - [ [ [s,t,r], [i,n,g], [i,n,t,e], [g,e,r,s] ] ]
+
+         */
 
 public class Solution
 {
@@ -38,17 +52,8 @@ public class Solution
             backpacks.Add(oneLine);
             oneLine = reader.ReadLine();
         }
-
-        /*
-
-        I need a nice way to split a string in half and I don't know how to do that yet
-            - maybe add all the individual chars to a list and split that one in half
-            - then do the comparison thing on it
-
-         */
-
-
         // this is a list that contains each of the input strings as a list of individual characters
+        // [ [s,t,r,i,n,g], [i,n,t,e,g,e,r,s] ]
         List<List<char>> characterList = new();
 
         foreach (string backpack in backpacks)
@@ -68,6 +73,7 @@ public class Solution
         }
 
         // list of all the halves of strings
+        // - [ [ [s,t,r], [i,n,g], [i,n,t,e], [g,e,r,s] ] ]
         List<List<List<char>>> halvesOfStrings = new();
 
         foreach (List<char> listOfCharacters in characterList)
@@ -88,7 +94,7 @@ public class Solution
                 fistHalf.Add(character);
             }
 
-            foreach (char character in stringList.GetRange(middle, count: middle))
+            foreach (char character in stringList.GetRange(middle, middle))
             {
                 secondHalf.Add(character);
             }
@@ -99,47 +105,15 @@ public class Solution
             return halves;
         }
         /*
-        foreach (char letter in stringList)
-        {
-            int middle = stringList.Count / 2;
-
-
-            /*
-            if (stringList.IndexOf(letter) < middle)
-            {
-                fistHalf.Add(letter);
-            }
-            else if (stringList.IndexOf(letter) == middle)
-            {
-                secondHalf.Add(letter);
-            }
-            else
-            {
-                secondHalf.Add(letter);
-            }
-            */
-        /*
-
-        Current implementation:
-
-        Say we get the strings: "string" and "integers"
-
-        STEPS:
-        first:
-            - [string, integers]
-        second:
-            - [ [s,t,r,i,n,g], [i,n,t,e,g,e,r,s] ]
-        third:
-            - [ [ [s,t,r], [i,n,g], [i,n,t,e], [g,e,r,s] ] ]
-
-         */
-
-        // Compare each adjacent halves with each other and see which item is in both of them
-
-        foreach (List<List<char>> stringContainningTwoHalves in halvesOfStrings)
+        List<char> testList1 = new List<char>{'a', 'b', 'c', 'd', 'e'};
+        List<char> testList2 = new List<char>{'f', 'g', 'h', 'i', 'e'};
+        char testing = GetSharedLetterInTwoLists(testList1, testList2);
+        Console.WriteLine(testing);
+        
+        foreach (List<List<char>> stringContainingTwoHalves in halvesOfStrings)
         {
             Console.WriteLine("\nNew string: ");
-            foreach (List<char> half in stringContainningTwoHalves)
+            foreach (List<char> half in stringContainingTwoHalves)
             {
                 Console.WriteLine("\n\tNew half: ");
                 foreach (char letter in half)
@@ -148,5 +122,46 @@ public class Solution
                 }
             }
         }
+        */
+        
+        // Compare each adjacent halves with each other and see which item is in both of them
+        List<char> GetSharedLetters(List<List<List<char>>> halvesList)
+        {
+            List<char> sharedLetters = new();
+
+            foreach (List<List<char>> stringList in halvesList)
+            {
+                sharedLetters.Add(GetSharedLetterInTwoLists(stringList[0],stringList[1]));
+            }
+
+            return sharedLetters;
+        }
+        
+        char GetSharedLetterInTwoLists(List<char> input1, List<char> input2)
+        {
+            char sharedLetter = 'D';
+
+            foreach (char letter in input1)
+            {
+                if (input2.Contains(letter))
+                {
+                    sharedLetter = letter;
+                }
+            }
+            
+            return sharedLetter;
+        }
+        
+        // This is a list that contains the letters that are in both compartments for each backpack
+        List<char> sharedLetters = GetSharedLetters(halvesOfStrings);
+        foreach (char letter in sharedLetters)
+        {
+            Console.WriteLine(letter);
+        }
+        
+        
+        // lookup the priorities
+
+
     }
 }
