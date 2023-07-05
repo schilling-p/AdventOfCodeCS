@@ -127,14 +127,14 @@ public class Solution
         // Compare each adjacent halves with each other and see which item is in both of them
         List<char> GetSharedLetters(List<List<List<char>>> halvesList)
         {
-            List<char> sharedLetters = new();
+            List<char> listOfSharedLetters = new();
 
             foreach (List<List<char>> stringList in halvesList)
             {
-                sharedLetters.Add(GetSharedLetterInTwoLists(stringList[0],stringList[1]));
+                listOfSharedLetters.Add(GetSharedLetterInTwoLists(stringList[0],stringList[1]));
             }
 
-            return sharedLetters;
+            return listOfSharedLetters;
         }
         
         char GetSharedLetterInTwoLists(List<char> input1, List<char> input2)
@@ -152,15 +152,44 @@ public class Solution
             return sharedLetter;
         }
         
-        // This is a list that contains the letters that are in both compartments for each backpack
-        List<char> sharedLetters = GetSharedLetters(halvesOfStrings);
-        foreach (char letter in sharedLetters)
+        // building the lookup dictionary with ASCII values
+        Dictionary<char, int> priorityDictionary = new();
+        for (int i = 97; i <= 122; i++)
         {
-            Console.WriteLine(letter);
+            char letter = (char)i;
+            int number = i - 96;
+            priorityDictionary[letter] = number;
+        }
+
+        for (int i = 65; i <= 90; i++)
+        {
+            char letter = (char)i;
+            int number = i - 38;
+            priorityDictionary[letter] = number;
+        }
+        
+        // This is a list that contains the letters that are in both compartments for each backpack
+        List<char> sharedLettersOfBackpacks = GetSharedLetters(halvesOfStrings);
+        foreach (char letter in sharedLettersOfBackpacks)
+        {
+            Console.Write(letter);
+        }
+
+        Console.WriteLine($"The sum of the priorities is: {GetSumOfPriorities(sharedLettersOfBackpacks, priorityDictionary)}");
+
+        int GetSumOfPriorities(List<char> letterList, Dictionary<char, int> priorityLookUp)
+        {
+            int priority = 0;
+
+            foreach (char letter in letterList)
+            {
+                priority += priorityLookUp[letter];
+            }
+
+            return priority;
         }
         
         
-        // lookup the priorities
 
 
     }
