@@ -1,6 +1,6 @@
 ﻿/*
 
-DAY3 - RUCKSACKS AND COMPARTMENTS
+DAY3 - RUCKSACKS AND COMPARTMENTS - Part 1
 
 Input:
     - multiple sequences of characters
@@ -19,23 +19,41 @@ Output:
     - integer that is the sum of the priorities
 
 
+DAY3 - RUCKSACKS AND COMPARTMENTS - Part 2
+
+What changed?
+    - 3 Rucksacks in a row represent 3 elves that are in a group
+    - Instead of finding the item that is present in both halves of one elves' backpack,
+    I need to find the element that is present in 3 each other following backpacks,
+    meaning I need to view them as whole backpacks
+    
+Input:
+    - did not change
+
+Sequence of Steps:
+    - instead of making sub lists of halves I will now do sub lists that contain 3 backpacks
+    - find the common element and calculate the priorities
+    - sum up the priorities
+
+Output:
+    - did not change
+
  */
 
 /*
+Implementation:
 
-        Current implementation:
+Say we get the strings: "string" and "integers", "characters"
 
-        Say we get the strings: "string" and "integers"
+STEPS:
+first:
+    - [string, integers, characters]
+second:
+    - [ [ [s,t,r,i,n,g], [i,n,t,e,g,e,r,s], [ c,h,a,r,a,c,t,e,r,s ] ], [ new list of 3 backpacks] ]
+third:
+    - [ [ [s,t,r], [i,n,g], [i,n,t,e], [g,e,r,s] ] ]
 
-        STEPS:
-        first:
-            - [string, integers]
-        second:
-            - [ [s,t,r,i,n,g], [i,n,t,e,g,e,r,s] ]
-        third:
-            - [ [ [s,t,r], [i,n,g], [i,n,t,e], [g,e,r,s] ] ]
-
-         */
+ */
 
 public class Solution
 {
@@ -53,12 +71,12 @@ public class Solution
             oneLine = reader.ReadLine();
         }
         // this is a list that contains each of the input strings as a list of individual characters
-        // [ [s,t,r,i,n,g], [i,n,t,e,g,e,r,s] ]
-        List<List<char>> characterList = new();
+        // [ [s,t,r,i,n,g], [i,n,t,e,g,e,r,s], [r,e,a,d,e,r], [o,n,e,l,i,n,e], [b,a,c,k,p,a,c,k], [l,i,s,t] ]
+        List<List<char>> stringsAsCharactersList = new();
 
         foreach (string backpack in backpacks)
         {
-            characterList.Add(ReturnStringAsListOfChars(backpack));
+            stringsAsCharactersList.Add(ReturnStringAsListOfChars(backpack));
         }
 
         List<char> ReturnStringAsListOfChars(string input)
@@ -72,84 +90,48 @@ public class Solution
             return stringAsChar;
         }
 
-        // list of all the halves of strings
-        // - [ [ [s,t,r], [i,n,g], [i,n,t,e], [g,e,r,s] ] ]
-        List<List<List<char>>> halvesOfStrings = new();
-
-        foreach (List<char> listOfCharacters in characterList)
-        {
-            halvesOfStrings.Add(SplitListOfCharsInHalf(listOfCharacters));
-        }
-
-        List<List<char>> SplitListOfCharsInHalf(List<char> stringList)
-        {
-            List<List<char>> halves = new();
-            List<char> fistHalf = new();
-            List<char> secondHalf = new();
-
-            int middle = stringList.Count / 2;
-
-            foreach (char character in stringList.GetRange(0, middle))
-            {
-                fistHalf.Add(character);
-            }
-
-            foreach (char character in stringList.GetRange(middle, middle))
-            {
-                secondHalf.Add(character);
-            }
-
-            halves.Add(fistHalf);
-            halves.Add(secondHalf);
-
-            return halves;
-        }
-        /*
-        List<char> testList1 = new List<char>{'a', 'b', 'c', 'd', 'e'};
-        List<char> testList2 = new List<char>{'f', 'g', 'h', 'i', 'e'};
-        char testing = GetSharedLetterInTwoLists(testList1, testList2);
-        Console.WriteLine(testing);
+        List<char> stringList = stringsAsCharactersList[0];
         
-        foreach (List<List<char>> stringContainingTwoHalves in halvesOfStrings)
+        Console.WriteLine("\n New String: ");
+        foreach (char letter in stringList)
         {
-            Console.WriteLine("\nNew string: ");
-            foreach (List<char> half in stringContainingTwoHalves)
+            Console.Write(letter);
+        }
+        
+        // Goal:
+        // build a new list that groups together 3 adjacent elements of the characterList
+        // [ [ [s,t,r,i,n,g], [i,n,t,e,g,e,r,s], [r,e,a,d,e,r] ], [ [o,n,e,l,i,n,e], [b,a,c,k,p,a,c,k], [l,i,s,t] ] ]
+
+        // List that contains groups of 3 strings, each of which are lists of characters
+        List<List<List<char>>> groupsOfThree = new();
+
+        while (stringsAsCharactersList.Any())
+        {
+            int counter = 0;
+            List<List<char>> oneGroupOfThreeStrings = new();
+            
+            while (counter < 3)
             {
-                Console.WriteLine("\n\tNew half: ");
+                oneGroupOfThreeStrings.Add(stringsAsCharactersList[0]);
+                stringsAsCharactersList.RemoveAt(0);
+                counter += 1;
+            }
+            groupsOfThree.Add(oneGroupOfThreeStrings);
+        }
+
+
+        //PRINTING THE ELEMENTS OF 3 NESTED LISTS OUT:
+        foreach (List<List<char>> groupOfThree in groupsOfThree)
+        {
+            Console.WriteLine("\nNew group: ");
+            foreach (List<char> half in groupOfThree)
+            {
+                Console.WriteLine("New Third");
                 foreach (char letter in half)
                 {
                     Console.Write(letter);
                 }
             }
-        }
-        */
-        
-        // Compare each adjacent halves with each other and see which item is in both of them
-        List<char> GetSharedLetters(List<List<List<char>>> halvesList)
-        {
-            List<char> listOfSharedLetters = new();
-
-            foreach (List<List<char>> stringList in halvesList)
-            {
-                listOfSharedLetters.Add(GetSharedLetterInTwoLists(stringList[0],stringList[1]));
-            }
-
-            return listOfSharedLetters;
-        }
-        
-        char GetSharedLetterInTwoLists(List<char> input1, List<char> input2)
-        {
-            char sharedLetter = 'D';
-
-            foreach (char letter in input1)
-            {
-                if (input2.Contains(letter))
-                {
-                    sharedLetter = letter;
-                }
-            }
-            
-            return sharedLetter;
         }
         
         // building the lookup dictionary with ASCII values
@@ -169,7 +151,7 @@ public class Solution
         }
         
         // This is a list that contains the letters that are in both compartments for each backpack
-        List<char> sharedLettersOfBackpacks = GetSharedLetters(halvesOfStrings);
+        List<char> sharedLettersOfBackpacks = GetSharedLetters(groupsOfThree);
         foreach (char letter in sharedLettersOfBackpacks)
         {
             Console.Write(letter);
@@ -190,7 +172,34 @@ public class Solution
         }
         
         
+        // Compare each adjacent halves with each other and see which item is in both of them
+        List<char> GetSharedLetters(List<List<List<char>>> listOfGroupsOfThree)
+        {
+            List<char> listOfSharedLetters = new();
 
+            foreach (List<List<char>> groupOfThree in listOfGroupsOfThree)
+            {
+                listOfSharedLetters.Add(GetSharedLetterInGroupOfThree(groupOfThree[0],groupOfThree[1], groupOfThree[2]));
+            }
+
+            return listOfSharedLetters;
+        }
+        
+        // this needs to work for 3 lists
+        char GetSharedLetterInGroupOfThree(List<char> input1, List<char> input2, List<char> input3)
+        {
+            char sharedLetter = 'D';
+
+            foreach (char letter in input1)
+            {
+                if (input2.Contains(letter) && input3.Contains(letter))
+                {
+                    sharedLetter = letter;
+                }
+            }
+            
+            return sharedLetter;
+        }
 
     }
 }
