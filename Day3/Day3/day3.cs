@@ -59,9 +59,8 @@ public class Solution
 {
     public static void Main()
     {
-        string? oneLine;
         StreamReader reader = new StreamReader("/Users/paulschilling/Dokumente/Studium/Coding/C#/AdventOfCodeCs/Day3/Day3/backpacks.txt");
-        oneLine = reader.ReadLine();
+        string? oneLine = reader.ReadLine();
 
         List<string> backpacks = new List<string>();
 
@@ -90,14 +89,6 @@ public class Solution
             return stringAsChar;
         }
 
-        List<char> stringList = stringsAsCharactersList[0];
-        
-        Console.WriteLine("\n New String: ");
-        foreach (char letter in stringList)
-        {
-            Console.Write(letter);
-        }
-        
         // Goal:
         // build a new list that groups together 3 adjacent elements of the characterList
         // [ [ [s,t,r,i,n,g], [i,n,t,e,g,e,r,s], [r,e,a,d,e,r] ], [ [o,n,e,l,i,n,e], [b,a,c,k,p,a,c,k], [l,i,s,t] ] ]
@@ -116,6 +107,7 @@ public class Solution
                 stringsAsCharactersList.RemoveAt(0);
                 counter += 1;
             }
+            
             groupsOfThree.Add(oneGroupOfThreeStrings);
         }
 
@@ -161,14 +153,14 @@ public class Solution
 
         int GetSumOfPriorities(List<char> letterList, Dictionary<char, int> priorityLookUp)
         {
-            int priority = 0;
+            int sumOfPriorities = 0;
 
             foreach (char letter in letterList)
             {
-                priority += priorityLookUp[letter];
+                sumOfPriorities += priorityLookUp[letter];
             }
 
-            return priority;
+            return sumOfPriorities;
         }
         
         
@@ -179,14 +171,13 @@ public class Solution
 
             foreach (List<List<char>> groupOfThree in listOfGroupsOfThree)
             {
-                listOfSharedLetters.Add(GetSharedLetterInGroupOfThree(groupOfThree[0],groupOfThree[1], groupOfThree[2]));
+                listOfSharedLetters.Add(GetSharedLetterInGroupOfThreeLists(groupOfThree[0],groupOfThree[1], groupOfThree[2]));
             }
 
             return listOfSharedLetters;
         }
         
-        // this needs to work for 3 lists
-        char GetSharedLetterInGroupOfThree(List<char> input1, List<char> input2, List<char> input3)
+        char GetSharedLetterInGroupOfThreeLists(List<char> input1, List<char> input2, List<char> input3)
         {
             char sharedLetter = 'D';
 
