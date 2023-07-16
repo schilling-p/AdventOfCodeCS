@@ -98,7 +98,7 @@ namespace Day4
             
             while (counter < fullSections.Count)
             {
-                if (BooleanSectionContainChecker(fullSections[counter], fullSections[counter + 1]))
+                if (SectionOverlapChecker(fullSections[counter], fullSections[counter + 1]))
                 {
                     contains += 1;
                 }
@@ -107,7 +107,7 @@ namespace Day4
             }
             
 
-            bool BooleanSectionContainChecker(int[] arr1, int[] arr2)
+            bool SectionContainChecker(int[] arr1, int[] arr2)
             {
                 bool containing1 = true;
                 bool containing2 = true;
@@ -132,6 +132,33 @@ namespace Day4
 
                 return containing1 || containing2;
             }
+
+            bool SectionOverlapChecker(int[] arr1, int[] arr2)
+            {
+                bool contains1 = false;
+                bool contains2 = false;
+                
+                foreach (int number in arr1)
+                {
+                    if (arr2.Contains(number))
+                    {
+                        contains1 = true;
+                        break;
+                    }
+                }
+
+                foreach (int number in arr2)
+                {
+                    if (arr1.Contains(number))
+                    {
+                        contains2 = true;
+                        break;
+                    }
+                }
+                
+                return contains1 || contains2;
+                
+            }
             
             Console.WriteLine(fullSections.Count);
             Console.WriteLine(contains);
@@ -140,7 +167,7 @@ namespace Day4
             
             int[] test2 = { 1, 2, 3, 4, 5 };
             int[] test1 = { 1, 2, 3, 6};
-            Console.WriteLine(BooleanSectionContainChecker(test1, test2));
+            Console.WriteLine(SectionOverlapChecker(test1, test2));
             
             
             void PrintValuesOfArray(Object[] myArr)
