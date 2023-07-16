@@ -7,3 +7,5 @@ This is a repository that will show my progress in learning the C# language thro
 01.07.2023: finished Day2
 
 11.07.2023: finished Day3
+
+16.07.2023: finished Day4
