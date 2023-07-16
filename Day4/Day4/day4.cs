@@ -20,8 +20,6 @@ Context of Execution:
  */
 
 
-using System.Xml.XPath;
-
 namespace Day4
 {
     class Solution
@@ -32,45 +30,54 @@ namespace Day4
                 new StreamReader(
                     "/Users/paulschilling/Dokumente/Studium/Coding/C#/AdventOfCodeCs/Day4/Day4/section_assignments.txt");
             string? oneLine = reader.ReadLine();
-            List<string> sectionPairs = new();
+            List<string> sectionPairsFromInput = new();
             while (oneLine != null)
             {
-                sectionPairs.Add(oneLine);
+                sectionPairsFromInput.Add(oneLine);
                 oneLine = reader.ReadLine();
             }
 
             List<string[]> listOfSectionsAsStrings = new List<string[]>();
-            List<int[]> listOfSections = new List<int[]>();
-            char[] delimiters = { ',', '-' };
+            List<int[]> listOfIndividualSectionsAsInts = new List<int[]>();
+            char[] delimiters = { ',' };
             
-            foreach (string sectionPair in sectionPairs)
+            foreach (string sectionPair in sectionPairsFromInput)
             {
                 string[] sectionPairNumbersAsStrings = sectionPair.Split(delimiters);
 
                 listOfSectionsAsStrings.Add(sectionPairNumbersAsStrings);
             }
-
+            
             foreach (string[] section in listOfSectionsAsStrings)
             {
-                foreach (string letter in section)
+                foreach (string character in section)
                 {
-                    int[] sectionPairNumbers = {int.Parse(letter)};
-                    listOfSections.Add(sectionPairNumbers);
+                    string[] oneSectionAsString = character.Split("-");
+                    
+                    int[] oneSectionAsInts = Array.ConvertAll(oneSectionAsString, int.Parse);
+                    
+                    listOfIndividualSectionsAsInts.Add(oneSectionAsInts);
                 }
             }
+            // Now there is a list of arrays where each array represents a section
+            // I know that 2 arrays following each other represent a line from the input
+            // [2-4],[6-8]
+            //Console.WriteLine(listOfIndividualSectionsAsInts[0][0]);
 
-            foreach (int[] section in listOfSections)
+
+            // This list contains all the sections but written out in full length
+            List<int[]> fullSections = new();
+            foreach (int[] section in listOfIndividualSectionsAsInts)
             {
-                foreach (int number in section)
-                {
-                    Console.Write(number);
-                }
+                fullSections.Add(CreateArrayFromSection(section));
+            }
+
+            foreach (int[] fullSection in fullSections)
+            {
+                Console.WriteLine("New Section:");
+                PrintValuesOfIntArray(fullSection);
             }
             
-            /* TESTING */
-            
-            int[] testSection = { 5, 5 };
-
             int[] CreateArrayFromSection(int[] section)
             {
 
@@ -84,12 +91,35 @@ namespace Day4
                 return wholeSection;
 
             }
+            
 
-            int[] testing = CreateArrayFromSection(testSection);
-            foreach (int number in testing)
+
+            /* TESTING */
+            
+            
+            // Build a method that takes 2 arrays of type int as arguments
+            // and returns true if one is fully contained in the other
+            
+            
+            void PrintValuesOfArray(Object[] myArr)
             {
-                Console.WriteLine(number);
+                foreach (Object i in myArr)
+                {
+                    Console.WriteLine(i);
+                }
             }
+            
+            void PrintValuesOfIntArray(int[] myArr)
+            {
+                foreach (int i in myArr)
+                {
+                    Console.WriteLine(i);
+                }
+            }
+
+            
+
+            
 
 
 
